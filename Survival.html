@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Planet Survival Simulator</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial;
+    background: radial-gradient(circle at top, #1b2735, #090a0f);
+    color:white;
+    background-image: url("space1.jpg");
+    background-repeat: no-repeat;
+background-size: cover;
+}
+
+/* Title */
+h1{
+    text-align:center;
+    margin-top:30px;
+}
+
+/* Layout */
+.container{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    min-height:80vh;
+    padding:40px;
+    gap:40px;
+    flex-wrap:wrap;
+}
+
+/* Glass Card */
+.card{
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    padding:30px;
+    border-radius:15px;
+    width:350px;
+    box-shadow:0 0 20px rgba(0,255,255,0.3);
+}
+
+/* Inputs */
+label{
+    display:block;
+    margin-top:15px;
+    font-size:14px;
+}
+
+select{
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+    border-radius:5px;
+    border:none;
+}
+
+/* Button */
+button{
+    width:100%;
+    padding:10px;
+    margin-top:20px;
+    border:none;
+    border-radius:5px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:white;
+    color:black;
+}
+
+/* Circular Progress */
+.circle{
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    background:conic-gradient(green 0deg, #333 0deg);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:20px auto;
+}
+
+.circle span{
+    font-size:30px;
+    font-weight:bold;
+}
+
+.status{
+    text-align:center;
+    margin-top:15px;
+    font-size:18px;
+}
+
+/* Back Button at Bottom */
+.back-container{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.back-btn{
+    width:200px;
+}
+</style>
+</head>
+
+<body>
+
+<h1> Planet Survival Simulator</h1>
+
+<div class="container">
+
+<!-- LEFT PANEL -->
+<div class="card">
+
+<label>Distance from Sun</label>
+<select id="distance">
+<option value="20">Too Close</option>
+<option value="40">Close</option>
+<option value="70">Perfect Zone</option>
+<option value="30">Far</option>
+<option value="10">Too Far</option>
+</select>
+
+<label>Temperature</label>
+<select id="temp">
+<option value="10">Very Hot</option>
+<option value="30">Hot</option>
+<option value="70">Moderate</option>
+<option value="30">Cold</option>
+<option value="10">Very Cold</option>
+</select>
+
+<label>Water %</label>
+<select id="water">
+<option value="0">0%</option>
+<option value="20">20%</option>
+<option value="40">40%</option>
+<option value="70">70%</option>
+<option value="50">90%</option>
+</select>
+
+<label>Atmosphere</label>
+<select id="atmosphere">
+<option value="70">Oxygen Rich</option>
+<option value="20">Carbon Dioxide</option>
+<option value="10">Methane</option>
+<option value="0">None</option>
+</select>
+
+<label>Gravity</label>
+<select id="gravity">
+<option value="70">Earth-like</option>
+<option value="40">Low</option>
+<option value="20">High</option>
+<option value="10">Extreme</option>
+</select>
+
+<button onclick="calculate()">Run Simulation</button>
+
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="card">
+
+<h2 style="text-align:center;">Simulation Result</h2>
+
+<div class="circle" id="circle">
+<span id="percent">0%</span>
+</div>
+
+<div class="status" id="status">
+Adjust values and run simulation.
+</div>
+
+</div>
+
+</div>
+
+<!-- BACK BUTTON AT BOTTOM -->
+<div class="back-container">
+<button class="back-btn" onclick="goBack()">⬅ Back to Dashboard</button>
+</div>
+
+<script>
+
+function calculate(){
+
+let distance = parseInt(document.getElementById("distance").value);
+let temp = parseInt(document.getElementById("temp").value);
+let water = parseInt(document.getElementById("water").value);
+let atmosphere = parseInt(document.getElementById("atmosphere").value);
+let gravity = parseInt(document.getElementById("gravity").value);
+
+let score = distance + temp + water + atmosphere + gravity;
+let percentage = Math.round((score / 350) * 100);
+
+let circle = document.getElementById("circle");
+let percentText = document.getElementById("percent");
+let statusText = document.getElementById("status");
+
+let color = percentage >= 70 ? "green" :
+            percentage >= 40 ? "orange" : "red";
+
+let degree = (percentage / 100) * 360;
+
+circle.style.background =
+`conic-gradient(${color} ${degree}deg, #333 ${degree}deg)`;
+
+percentText.innerText = percentage + "%";
+
+if(percentage >= 70){
+    statusText.innerHTML = "✅ Supports Life";
+}
+else if(percentage >= 40){
+    statusText.innerHTML = "⚠️ Partially Habitable";
+}
+else{
+    statusText.innerHTML = "❌ Not Suitable for Life";
+}
+
+localStorage.setItem("survivalScore", percentage);
+
+}
+
+function goBack(){
+window.location.href="dashboard.html";
+}
+
+</script>
+
+</body>
+</html>
